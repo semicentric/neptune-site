@@ -4,9 +4,6 @@ on:
   push:
     branches: [master]
   workflow_dispatch:
-  schedule:
-    - cron: '0 */6 * * *'
-
 permissions:
   contents: read
   pages: write
@@ -24,22 +21,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Fetch version from neptune repo
-        env:
-          GH_TOKEN: ${{ secrets.NEPTUNE_PAT }}
-        run: |
-          VERSION=$(curl -sf \
-            -H "Authorization: token $GH_TOKEN" \
-            -H "Accept: application/vnd.github.v3.raw" \
-            "https://api.github.com/repos/semicentric/neptune/contents/Cargo.toml" \
-            | grep -A5 '\[workspace.package\]' | grep '^version' | sed 's/.*"\(.*\)".*/\1/')
-          if [ -n "$VERSION" ]; then
-            sed -i "s|<p class=\"version\">v[^<]*</p>|<p class=\"version\">v${VERSION}</p>|" index.html
-            echo "Updated version to v${VERSION}"
-          else
-            echo "Failed to fetch version, keeping existing"
-          fi
 
       - name: Cache-bust assets with commit hash
         run: |
