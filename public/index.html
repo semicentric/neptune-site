@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#060608" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f4f2ee" media="(prefers-color-scheme: light)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Neptune</title>
+    <meta name="description" content="AI-powered reverse engineering pipeline for firmware SBOM generation and vulnerability correlation.">
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://neptune.rip">
+    <meta property="og:title" content="Neptune">
+    <meta property="og:description" content="AI-powered reverse engineering pipeline for firmware SBOM generation and vulnerability correlation.">
+    <meta property="og:image" content="https://neptune.rip/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Neptune">
+    <meta name="twitter:description" content="AI-powered reverse engineering pipeline for firmware SBOM generation and vulnerability correlation.">
+    <meta name="twitter:image" content="https://neptune.rip/og-image.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="page">
+        <div class="left">
+            <div id="unicorn-bg" data-us-project="3Mj5abV0SehbgkXXHDrc" data-us-production="true"></div>
+            <div class="left-content">
+                <h1>Neptune</h1>
+            </div>
+            <a href="https://semicentric.co" class="attribution">a semicentric project</a>
+        </div>
+        <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-label">RE</span>
+            <div class="divider-line"></div>
+        </div>
+        <div class="right">
+            <div class="right-center">
+                <div class="right-top">
+                    <p class="descriptor">Reverse engineering pipeline for<br>firmware SBOM generation &amp;<br> vulnerability correlation</p>
+                </div>
+                <div class="right-mid">
+                <div class="capability">
+                    <span class="cap-label">Extract</span>
+                    <span class="cap-value">ELF / PE / Mach-O &mdash; six architectures</span>
+                </div>
+                <div class="capability">
+                    <span class="cap-label">Identify</span>
+                    <span class="cap-value">Signatures, heuristics, AI analysis</span>
+                </div>
+                <div class="capability">
+                    <span class="cap-label">Generate</span>
+                    <span class="cap-value">CycloneDX 1.6 / SPDX 2.3 / VEX</span>
+                </div>
+                <div class="capability">
+                    <span class="cap-label">Correlate</span>
+                    <span class="cap-value">NVD + OSV vulnerability matching</span>
+                </div>
+                <div class="capability">
+                    <span class="cap-label">Rebuild</span>
+                    <span class="cap-value">Decompile, refine, port</span>
+                </div>
+            </div>
+            </div>
+            <div class="right-bottom">
+                <button class="install" id="installBtn" aria-label="Copy install command">
+                    <span class="morph-text" id="morphText"></span>
+                </button>
+                <nav class="links">
+                    <a href="https://github.com/semicentric">GitHub</a>
+                    <button class="link-btn" id="contactBtn" aria-label="Copy email address"><span class="morph-text" id="contactMorphText"></span></button>
+                    <a href="https://semicentric.co" class="attribution-mobile">Semicentric</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.0-1/dist/unicornStudio.umd.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
