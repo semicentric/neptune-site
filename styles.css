@@ -311,9 +311,13 @@ h1 {
         padding: calc(2dvh + var(--safe-top)) 5vw 1.5dvh;
     }
 
-    h1 { font-size: clamp(2rem, 10vw, 3.5rem); }
+    #unicorn-bg {
+        opacity: 0.35;
+    }
 
-    .version { margin-top: 0.8dvh; font-size: clamp(0.45rem, 1.2vw, 0.55rem); }
+    h1 { font-size: clamp(2.8rem, 13vw, 4.5rem); }
+
+    .version { margin-top: 0.8dvh; font-size: clamp(0.55rem, 2vw, 0.65rem); }
 
     .divider { display: none; }
 
@@ -328,7 +332,7 @@ h1 {
     .right-center { gap: 2dvh; flex: 1; min-height: 0; }
 
     .descriptor {
-        font-size: clamp(0.72rem, 2.2vw, 0.92rem);
+        font-size: clamp(0.85rem, 3vw, 1.05rem);
         line-height: 1.5;
         max-width: none;
     }
@@ -337,8 +341,8 @@ h1 {
     .right-mid { flex-shrink: 0; }
 
     .capability { padding: 0.8dvh 0; }
-    .cap-label { width: 18vw; font-size: clamp(0.45rem, 1.4vw, 0.58rem); }
-    .cap-value { font-size: clamp(0.65rem, 2vw, 0.82rem); }
+    .cap-label { width: 18vw; font-size: clamp(0.55rem, 2vw, 0.65rem); }
+    .cap-value { font-size: clamp(0.75rem, 2.5vw, 0.9rem); }
 
     .right-bottom {
         flex-direction: column;
