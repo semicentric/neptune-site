@@ -301,6 +301,8 @@ h1 {
 }
 
 @media (max-width: 768px) {
+    :root { --bg: #000; }
+
     .page {
         flex-direction: column;
         height: 100vh;
@@ -314,7 +316,7 @@ h1 {
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        background: #000;
+        background: var(--bg);
     }
 
 
@@ -377,5 +379,5 @@ h1 {
 }
 
 @media (max-width: 768px) and (prefers-color-scheme: light) {
-    .left { background: #fff; }
+    :root { --bg: #fff; }
 }
