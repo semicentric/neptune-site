@@ -314,8 +314,10 @@ h1 {
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        background: var(--bg);
+        background: #000;
     }
+
+
 
     #unicorn-bg {
         position: absolute;
@@ -372,4 +374,8 @@ h1 {
     .links a, .links .link-btn { font-size: clamp(0.7rem, 3vw, 0.85rem); padding: 0 3.5vw; }
     .links a:first-child { padding-left: 0; }
     .links .link-btn:last-child { padding-right: 0; }
+}
+
+@media (max-width: 768px) and (prefers-color-scheme: light) {
+    .left { background: #fff; }
 }
