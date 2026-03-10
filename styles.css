@@ -120,9 +120,9 @@ h1 {
 
 .divider-label {
     font-family: var(--mono);
-    font-size: 0.55rem;
+    font-size: 0.6rem;
     font-weight: 500;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.12em;
     color: var(--text-dim);
     padding: 16px 0;
     writing-mode: vertical-rl;
@@ -177,9 +177,9 @@ h1 {
 
 .cap-label {
     font-family: var(--mono);
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     font-weight: 500;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--text);
     width: 88px;
@@ -241,7 +241,8 @@ h1 {
     gap: 0;
 }
 
-.links a {
+.links a,
+.link-btn {
     font-family: var(--mono);
     font-size: 0.68rem;
     font-weight: 300;
@@ -254,22 +255,13 @@ h1 {
     cursor: pointer;
 }
 
-.links a:last-child, .links .link-btn:last-child { border-right: none; padding-right: 0; }
-.links a:hover, .links .link-btn:hover { color: var(--text-bright); }
-
 .link-btn {
     background: none;
     border: none;
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    font-weight: 300;
-    letter-spacing: 0.04em;
-    color: var(--text);
-    padding: 0 14px;
-    border-right: 0.5px solid var(--border);
-    transition: color 0.2s ease;
-    cursor: pointer;
 }
+
+.links a:last-child, .links .link-btn:last-child { border-right: none; padding-right: 0; }
+.links a:hover, .links .link-btn:hover { color: var(--text-bright); }
 
 @keyframes revealLeft {
     from { opacity: 0; transform: translateX(-20px); }
@@ -309,8 +301,6 @@ h1 {
         overflow: hidden;
         background: var(--bg);
     }
-
-
 
     #unicorn-bg {
         position: absolute;
