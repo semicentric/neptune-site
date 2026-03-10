@@ -1,0 +1,33 @@
+---
+title: neptune scan
+description: Quick scan using string and constant heuristics only
+---
+
+# neptune scan
+
+Runs a fast scan using string matching and constant detection. No AI analysis or signature matching. Equivalent to `neptune analyze --no-ai --depth quick`.
+
+## Usage
+
+```bash
+neptune scan <BINARY> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<BINARY>` | Path to the firmware binary file |
+
+## Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `-o, --output <DIR>` | `.` | Output directory for reports |
+
+## Examples
+
+```bash
+neptune scan firmware.bin
+neptune scan firmware.bin --output ./reports
+```

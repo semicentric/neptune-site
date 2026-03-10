@@ -1,0 +1,83 @@
+---
+title: neptune db
+description: Manage the signature database
+---
+
+# neptune db
+
+Manage Neptune's SQLite signature database used for function fingerprint matching.
+
+## Subcommands
+
+### `neptune db init`
+
+Initialize a new empty signature database.
+
+```bash
+neptune db init [PATH]
+```
+
+| Argument | Default | Description |
+|---|---|---|
+| `[PATH]` | `neptune-signatures.db` | Database file path |
+
+### `neptune db stats`
+
+Display statistics about the signature database.
+
+```bash
+neptune db stats [PATH]
+```
+
+### `neptune db import`
+
+Import signatures from a JSON file.
+
+```bash
+neptune db import [PATH] --file <JSON_FILE>
+```
+
+| Flag | Description |
+|---|---|
+| `-f, --file <FILE>` | JSON file with signature entries |
+
+### `neptune db generate`
+
+Generate signatures from a compiled library binary.
+
+```bash
+neptune db generate <BINARY> --library <NAME> --version <VER> [OPTIONS]
+```
+
+| Flag | Default | Description |
+|---|---|---|
+| `-l, --library <NAME>` | *required* | Library name (e.g., "OpenSSL") |
+| `-V, --version <VER>` | *required* | Library version (e.g., "1.1.1w") |
+| `-o, --output <FILE>` | `generated-signatures.json` | Output JSON file |
+
+### `neptune db update`
+
+Download the latest signatures from the remote database.
+
+```bash
+neptune db update [PATH] [OPTIONS]
+```
+
+| Flag | Description |
+|---|---|
+| `--url <URL>` | Remote URL override (defaults to `NEPTUNE_SIG_REMOTE_URL` or `https://signatures.neptune.dev`) |
+
+## Examples
+
+```bash
+# Initialize and populate
+neptune db init
+neptune db import --file signatures/openssl-x86_64.json
+neptune db stats
+
+# Generate from a compiled library
+neptune db generate /usr/lib/libssl.so --library OpenSSL --version 3.0.12
+
+# Update from remote
+neptune db update
+```

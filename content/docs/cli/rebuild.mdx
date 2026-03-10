@@ -1,0 +1,61 @@
+---
+title: neptune rebuild
+description: Decompile and rebuild a binary into a buildable C project
+---
+
+# neptune rebuild
+
+Decompiles a binary and produces a buildable C project. Optionally runs an iterative build-compare-refine loop using an AI agent until the rebuild matches the original binary.
+
+## Usage
+
+```bash
+neptune rebuild <BINARY> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<BINARY>` | Path to the firmware binary file |
+
+## Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `-o, --output-dir <DIR>` | `~/neptune-rebuilds/<name>/` | Output directory for the rebuilt project |
+| `--refine` | | Enable the build-compare-refine loop |
+| `--resume` | | Resume a previously interrupted refinement session |
+| `--max-iterations <N>` | `5` | Maximum refinement iterations |
+| `--similarity-threshold <FLOAT>` | `0.85` | Similarity threshold for binary comparison (0.0–1.0) |
+| `--api-key <KEY>` | | Anthropic API key |
+| `--max-functions <N>` | `50` | Maximum functions to decompile |
+
+## Examples
+
+```bash
+# Basic rebuild (decompile + export, no refinement)
+neptune rebuild firmware.bin
+
+# With iterative refinement
+neptune rebuild firmware.bin --refine --max-iterations 10
+
+# Resume an interrupted session
+neptune rebuild firmware.bin --resume
+
+# Custom output and higher similarity bar
+neptune rebuild firmware.bin --refine --output-dir ./my-rebuild --similarity-threshold 0.95
+```
+
+## Refinement loop
+
+When `--refine` is enabled, Neptune:
+
+1. Decompiles all detected user functions
+2. Exports a buildable C project with Makefile
+3. Attempts to compile the project
+4. Compares the rebuilt binary against the original
+5. If similarity is below threshold, uses an AI agent to fix issues
+6. Repeats until threshold is met or max iterations reached
+
+The refinement state is saved to disk, allowing `--resume` if interrupted.

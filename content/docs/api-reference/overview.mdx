@@ -1,0 +1,46 @@
+---
+title: API Overview
+description: Neptune REST API reference
+---
+
+# REST API
+
+Neptune exposes a REST API via the `neptune serve` command. The API is built with [Axum](https://github.com/tokio-rs/axum) and documented with OpenAPI.
+
+## Base URL
+
+```
+http://localhost:9090/api/v1
+```
+
+## Interactive docs
+
+OpenAPI/Swagger documentation is available at:
+
+```
+http://localhost:9090/api/v1/docs
+```
+
+## Authentication
+
+All endpoints require an API key in the `Authorization` header:
+
+```bash
+curl -H "Authorization: Bearer <key>" http://localhost:9090/api/v1/jobs
+```
+
+See [Authentication](/configuration/authentication) for role-based access details.
+
+## Rate limiting
+
+Requests are rate-limited per IP at `NEPTUNE_RATE_LIMIT_RPM` requests per minute (default: 60).
+
+## Response format
+
+All responses are JSON. Errors follow a consistent format:
+
+```json
+{
+  "error": "description of what went wrong"
+}
+```

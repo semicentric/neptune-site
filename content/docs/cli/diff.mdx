@@ -1,0 +1,34 @@
+---
+title: neptune diff
+description: Compare two firmware binaries to see component changes
+---
+
+# neptune diff
+
+Compare two firmware binaries and report added, removed, and changed components.
+
+## Usage
+
+```bash
+neptune diff <OLD> <NEW> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<OLD>` | Path to the old firmware binary |
+| `<NEW>` | Path to the new firmware binary |
+
+## Options
+
+| Flag | Description |
+|---|---|
+| `--json` | Output as JSON instead of human-readable |
+
+## Examples
+
+```bash
+neptune diff old-firmware.bin new-firmware.bin
+neptune diff v1.0.bin v2.0.bin --json
+```

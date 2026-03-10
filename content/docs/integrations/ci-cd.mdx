@@ -1,0 +1,68 @@
+---
+title: CI/CD Integration
+description: Using Neptune in continuous integration pipelines
+---
+
+# CI/CD Integration
+
+Neptune is designed for CI/CD pipelines with JSON output, exit codes, and policy gates.
+
+## JSON output
+
+Use `--json --quiet` for machine-readable output:
+
+```bash
+neptune analyze firmware.bin --json --quiet > result.json
+```
+
+## Policy gates
+
+Use `neptune policy` as a CI gate. It exits with code 1 on failure:
+
+```yaml
+- name: Analyze firmware
+  run: neptune analyze firmware.bin --json --quiet --output ./reports
+
+- name: Check policy
+  run: neptune policy security-policy.toml ./reports/result.json
+```
+
+## GitHub Actions example
+
+```yaml
+name: Firmware SBOM
+on:
+  push:
+    paths: ['firmware/**']
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Neptune
+        run: |
+          curl -L https://github.com/neptune-re/neptune/releases/latest/download/neptune-linux-x86_64 -o neptune
+          chmod +x neptune
+          sudo mv neptune /usr/local/bin/
+
+      - name: Analyze
+        run: neptune analyze firmware/device.bin --format cyclonedx --output ./sbom
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: ./sbom/
+```
+
+## No-AI mode
+
+For deterministic CI runs without API dependencies:
+
+```bash
+neptune analyze firmware.bin --no-ai --min-confidence 0.5
+```

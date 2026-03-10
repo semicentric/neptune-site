@@ -1,0 +1,59 @@
+---
+title: Introduction
+description: AI-powered reverse engineering pipeline for firmware SBOM generation and vulnerability correlation
+---
+
+# Neptune
+
+Neptune analyzes stripped firmware binaries to identify statically-linked C/C++ libraries, then generates regulatory-compliant SBOMs and correlates known vulnerabilities.
+
+Regulations like **US Executive Order 14028**, the **EU Cyber Resilience Act**, and **FDA 524B** now require Software Bills of Materials for firmware, but stripped binaries ship without manifests. Neptune solves this.
+
+## How it works
+
+Neptune combines multiple identification techniques with confidence-weighted scoring:
+
+1. **Multi-format extraction** — Parse ELF, PE, and Mach-O binaries with entropy analysis and section mapping
+2. **Multi-architecture disassembly** — Capstone-backed disassembly for x86, x86_64, ARM, AArch64, MIPS, RISC-V, and PowerPC
+3. **Layered identification** — Strings, constants, compiler ID, signature fingerprinting, cross-correlation, and AI analysis each contribute scored evidence
+4. **SBOM generation** — CycloneDX 1.6, SPDX 2.3, VEX, HTML reports, and JSON output
+5. **Vulnerability correlation** — Cross-reference identified components against NVD (via CPE) and OSV (via PURL)
+
+## Key features
+
+<Cards>
+  <Card title="Full Pipeline Analysis">
+    Seven-stage pipeline: extraction, disassembly, scanning, fingerprinting, AI analysis, SBOM generation, and vulnerability correlation.
+  </Card>
+  <Card title="AI Decompilation">
+    Claude-powered decompilation of binary functions back to readable C/C++ source code.
+  </Card>
+  <Card title="Binary Rebuild">
+    Decompile an entire binary into a buildable C project with iterative refinement until the rebuild matches the original.
+  </Card>
+  <Card title="Cross-Platform Porting">
+    Port verified rebuilt source to a different target triple using AI-assisted platform adaptation.
+  </Card>
+  <Card title="Firmware Diff">
+    Compare two firmware binaries to see added, removed, and changed components.
+  </Card>
+  <Card title="Signature Database">
+    986 bundled signatures across 20 libraries and 5 architectures, extracted from real Debian-compiled binaries.
+  </Card>
+  <Card title="Web Dashboard">
+    Next.js frontend with GitHub OAuth, job management, real-time SSE progress, and signature browsing.
+  </Card>
+  <Card title="REST API">
+    Axum server with role-based auth, TLS, rate limiting, S3 storage, and OpenAPI docs.
+  </Card>
+</Cards>
+
+## Supported formats
+
+| Category | Supported |
+|---|---|
+| **Binary formats** | ELF, PE, Mach-O |
+| **Architectures** | x86, x86_64, ARM, AArch64, MIPS, RISC-V, PowerPC |
+| **SBOM formats** | CycloneDX 1.6, SPDX 2.3, VEX, HTML, JSON |
+| **Firmware containers** | SquashFS, JFFS2, CramFS, CPIO, UBI, Android Boot |
+| **Vuln databases** | NVD (CPE), OSV (PURL) |

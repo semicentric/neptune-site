@@ -1,0 +1,60 @@
+---
+title: Authentication
+description: Anthropic API authentication and server role-based access
+---
+
+# Authentication
+
+Neptune has two authentication layers: Anthropic API auth (for AI features) and server API auth (for the REST API).
+
+## Anthropic API
+
+Neptune needs Anthropic API access for AI-powered features (analysis, decompilation, rebuild, port).
+
+### Credential resolution order
+
+1. `--api-key` CLI flag
+2. `ANTHROPIC_API_KEY` environment variable
+3. Stored OAuth credentials (from `neptune login`)
+
+### OAuth login
+
+```bash
+neptune login
+```
+
+Opens a browser for Anthropic OAuth. Credentials are stored locally at `~/.config/neptune/credentials.json`.
+
+### API key
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...
+```
+
+## Server API authentication
+
+The REST API supports three roles with different access levels:
+
+| Role | Access | Variable |
+|---|---|---|
+| **Admin** | Full access (all endpoints) | `NEPTUNE_ADMIN_KEY` |
+| **Analyst** | Read + analyze (submit jobs, view results) | `NEPTUNE_ANALYST_KEY` |
+| **Viewer** | Read-only (view results only) | `NEPTUNE_VIEWER_KEY` |
+
+Pass the API key in the `Authorization` header:
+
+```bash
+curl -H "Authorization: Bearer <key>" http://localhost:9090/api/v1/jobs
+```
+
+### Legacy key
+
+`NEPTUNE_API_KEY` is a legacy single-key mode that grants admin access. Use role-specific keys for production.
+
+## Web Dashboard auth
+
+The web dashboard uses [Better Auth](https://better-auth.com) with GitHub OAuth:
+
+1. Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`
+2. Set `BETTER_AUTH_SECRET` for session encryption
+3. Users log in via GitHub on the web UI

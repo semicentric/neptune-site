@@ -1,0 +1,73 @@
+---
+title: neptune analyze
+description: Run the full analysis pipeline on a firmware binary
+---
+
+# neptune analyze
+
+The primary command. Runs all seven pipeline stages: extraction, disassembly, scanning, fingerprinting, AI analysis, SBOM generation, and vulnerability correlation.
+
+## Usage
+
+```bash
+neptune analyze <BINARY> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<BINARY>` | Path to the firmware binary file |
+
+## Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `-d, --depth <DEPTH>` | `standard` | Analysis depth: `quick`, `standard`, or `deep` |
+| `-a, --arch <ARCH>` | auto-detect | Override architecture detection: `x86`, `x86_64`, `arm`, `arm64`, `mips`, `riscv` |
+| `-o, --output <DIR>` | `.` | Output directory for reports |
+| `-f, --format <FORMAT>` | `all` | Output formats: `cyclonedx`, `spdx`, `html`, `json`, `all` |
+| `--api-key <KEY>` | | Anthropic API key (or set `ANTHROPIC_API_KEY` env var) |
+| `--sig-db <PATH>` | `neptune-signatures.db` | Path to signature database |
+| `--no-ai` | | Skip AI analysis stage |
+| `--min-confidence <FLOAT>` | `0.3` | Minimum confidence threshold (0.0–1.0) |
+| `--json` | | Output results as JSON to stdout (for CI/CD) |
+| `-v, --verbose` | | Enable debug logging |
+| `-q, --quiet` | | Suppress all output except errors and final result |
+
+## Examples
+
+```bash
+# Full pipeline with defaults
+neptune analyze firmware.bin
+
+# Deep analysis on ARM64 binary
+neptune analyze firmware.bin --depth deep --arch arm64
+
+# No AI, higher confidence threshold
+neptune analyze firmware.bin --no-ai --min-confidence 0.5
+
+# CycloneDX only, specific output directory
+neptune analyze firmware.bin --format cyclonedx --output ./reports
+
+# JSON output for CI pipelines
+neptune analyze firmware.bin --json --quiet
+```
+
+## Pipeline stages
+
+| Stage | Description | Skippable |
+|---|---|---|
+| Extraction | Parse binary format, extract sections, compute metadata | No |
+| Disassembly | Disassemble code, detect function boundaries | No |
+| Quick scan | String matching, constant detection, compiler ID | No |
+| Fingerprinting | Match functions against signature database | No |
+| AI analysis | Claude analyzes disassembly patterns | `--no-ai` |
+| SBOM generation | Produce CycloneDX, SPDX, VEX, HTML, JSON | No |
+| Vulnerability correlation | Check NVD and OSV | No |
+
+## Analysis depth
+
+- **quick** — Strings and constants only (equivalent to `neptune scan`)
+- **standard** — All stages with balanced function sampling
+- **deep** — Exhaustive analysis with maximum function coverage

@@ -22,15 +22,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache-bust assets with commit hash
-        run: |
-          HASH=$(git rev-parse --short HEAD)
-          sed -i "s|href=\"styles.css\"|href=\"styles.css?v=${HASH}\"|" index.html
-          sed -i "s|src=\"main.js\"|src=\"main.js?v=${HASH}\"|" index.html
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Add CNAME
+        run: cp CNAME out/
 
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: out
       - uses: actions/deploy-pages@v4
         id: deployment

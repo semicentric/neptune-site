@@ -1,0 +1,87 @@
+---
+title: Architecture
+description: Neptune's crate structure and system design
+---
+
+# Architecture
+
+Neptune is a Rust workspace with 17 crates, each responsible for a distinct stage of the reverse engineering pipeline.
+
+## Crate map
+
+```
+crates/
+  neptune-core/           Core types, error handling, pipeline traits, config
+  neptune-extract/        Binary parsing (goblin) and section extraction
+  neptune-disasm/         Disassembly and function detection (capstone)
+  neptune-scan/           String/constant/compiler heuristic scanning
+  neptune-fingerprint/    SQLite signature database and function matching
+  neptune-ai/             Claude API client, OAuth, credential storage
+  neptune-decompile/      AI-powered decompilation to C/C++
+  neptune-rebuild/        Binary rebuild with iterative refinement
+  neptune-port/           Cross-platform porting to different target triples
+  neptune-sbom/           CycloneDX, SPDX, VEX, HTML, JSON output
+  neptune-vuln/           NVD and OSV vulnerability correlation
+  neptune-server/         Axum REST API with auth, TLS, storage, OpenAPI
+  neptune-cli/            CLI orchestration and progress display
+  neptune-unpack/         Firmware container extraction (squashfs, jffs2, etc.)
+  neptune-policy/         Policy evaluation engine
+  neptune-siggen/         Signature generation from compiled libraries
+  neptune-compliance/     Regulatory compliance checking
+
+web/                      Next.js dashboard (Better Auth, GitHub OAuth)
+neptune-agent/            GitHub Action for AI-assisted build-fix iteration
+```
+
+## Data flow
+
+```
+Binary File
+    │
+    ▼
+┌──────────────┐
+│  Extract     │  goblin: ELF/PE/Mach-O parsing
+│  (neptune-   │  Sections, symbols, strings, metadata
+│   extract)   │
+└──────┬───────┘
+       │ BinaryImage
+       ▼
+┌──────────────┐
+│  Disassemble │  capstone: multi-arch disassembly
+│  (neptune-   │  Function detection, CFG, basic blocks
+│   disasm)    │
+└──────┬───────┘
+       │ DisassemblyResult
+       ▼
+┌──────────────────────────────────────────────┐
+│  Identification Layer (parallel evidence)     │
+│                                               │
+│  ┌─────────┐  ┌──────────────┐  ┌─────────┐ │
+│  │  Scan   │  │ Fingerprint  │  │   AI    │ │
+│  │ strings │  │  signatures  │  │ Claude  │ │
+│  │ consts  │  │  SQLite DB   │  │ analysis│ │
+│  └────┬────┘  └──────┬───────┘  └────┬────┘ │
+│       │              │               │       │
+│       └──────────────┼───────────────┘       │
+│                      │                       │
+│              Merge + Deduplicate             │
+│         (confidence-weighted scoring)        │
+└──────────────────────┬───────────────────────┘
+                       │ Vec<IdentifiedComponent>
+                       ▼
+              ┌────────────────┐
+              │  SBOM + Vuln   │
+              │  CycloneDX     │
+              │  SPDX / VEX    │
+              │  NVD + OSV     │
+              └────────────────┘
+```
+
+## Identification merge
+
+Results from Scanner, Fingerprinter, and AI Analyzer are merged using confidence-weighted deduplication:
+
+- Each identification source produces `IdentifiedComponent` structs with a confidence score (0.0–1.0)
+- Components matching the same library are deduplicated, keeping the highest confidence
+- Cross-correlation between sources boosts confidence (e.g., string match + signature match)
+- Only components above `--min-confidence` threshold are included in the final SBOM

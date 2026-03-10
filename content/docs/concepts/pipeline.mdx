@@ -1,0 +1,80 @@
+---
+title: Pipeline
+description: The seven-stage analysis pipeline
+---
+
+# Analysis Pipeline
+
+Neptune's analysis pipeline runs seven stages sequentially. Each stage builds on the output of the previous one.
+
+## Stages
+
+### 1. Extraction
+
+**Crate:** `neptune-extract`
+
+Parses the binary using [goblin](https://crates.io/crates/goblin). Extracts:
+- Binary format (ELF, PE, Mach-O)
+- Architecture and endianness
+- Sections (`.text`, `.rodata`, `.data`, etc.)
+- Symbol table (if present)
+- String table
+- Entropy analysis per section
+- SHA-256 hash
+
+### 2. Disassembly
+
+**Crate:** `neptune-disasm`
+
+Uses [Capstone](https://www.capstone-engine.org/) for multi-architecture disassembly:
+- Function boundary detection
+- Basic block construction
+- Control flow graph
+- Supports: x86, x86_64, ARM, AArch64, MIPS, RISC-V, PowerPC
+
+### 3. Quick Scan
+
+**Crate:** `neptune-scan`
+
+Fast heuristic identification:
+- **String matching** — Known library version strings, copyright notices, error messages
+- **Constant detection** — Magic numbers, lookup tables, crypto constants
+- **Compiler identification** — GCC, Clang, MSVC signatures in the binary
+
+### 4. Signature Matching
+
+**Crate:** `neptune-fingerprint`
+
+Matches disassembled function bytes against the signature database:
+- SQLite-backed with 986 bundled signatures
+- 20 libraries across 5 architectures
+- Byte-pattern matching with fuzzy tolerance
+
+### 5. AI Analysis
+
+**Crate:** `neptune-ai`
+
+Claude analyzes disassembly patterns:
+- Identifies libraries from code structure and calling conventions
+- Provides version estimates with confidence scores
+- Can be skipped with `--no-ai`
+
+### 6. SBOM Generation
+
+**Crate:** `neptune-sbom`
+
+Produces standards-compliant output:
+- **CycloneDX 1.6** — Machine-readable SBOM
+- **SPDX 2.3** — Alternative SBOM standard
+- **VEX** — Vulnerability Exploitability eXchange
+- **HTML** — Human-readable report
+- **JSON** — Full analysis result
+
+### 7. Vulnerability Correlation
+
+**Crate:** `neptune-vuln`
+
+Cross-references identified components:
+- **NVD** — National Vulnerability Database via CPE matching
+- **OSV** — Open Source Vulnerabilities via PURL matching
+- Includes CVSS scores and advisory links

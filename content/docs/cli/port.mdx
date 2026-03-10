@@ -1,0 +1,35 @@
+---
+title: neptune port
+description: Port verified rebuilt source to a different target platform
+---
+
+# neptune port
+
+Takes the output of `neptune rebuild` and ports it to a different target triple using AI-assisted platform adaptation.
+
+## Usage
+
+```bash
+neptune port <SOURCE_DIR> --target <TRIPLE> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<SOURCE_DIR>` | Path to the verified source directory (output of `neptune rebuild`) |
+
+## Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `--target <TRIPLE>` | *required* | Target platform triple (e.g., `aarch64-unknown-linux-gnu`) |
+| `-o, --output-dir <DIR>` | `./neptune-port` | Output directory for ported project |
+| `--api-key <KEY>` | | Anthropic API key |
+
+## Examples
+
+```bash
+neptune port ./neptune-rebuild --target aarch64-unknown-linux-gnu
+neptune port ./my-rebuild --target x86_64-unknown-linux-musl --output-dir ./ported
+```

@@ -1,0 +1,37 @@
+---
+title: API Authentication
+description: Authenticating with the Neptune REST API
+---
+
+# API Authentication
+
+The Neptune REST API uses API key authentication with role-based access control.
+
+## Roles
+
+| Role | Permissions |
+|---|---|
+| **Admin** | Full access — manage jobs, view results, configure server |
+| **Analyst** | Submit analysis jobs, view results |
+| **Viewer** | View results only |
+
+## Usage
+
+Pass your API key in the `Authorization` header:
+
+```bash
+curl -H "Authorization: Bearer <your-api-key>" \
+  http://localhost:9090/api/v1/jobs
+```
+
+## Configuration
+
+Set role-specific keys via environment variables:
+
+```bash
+NEPTUNE_ADMIN_KEY=your-admin-key
+NEPTUNE_ANALYST_KEY=your-analyst-key
+NEPTUNE_VIEWER_KEY=your-viewer-key
+```
+
+If only `NEPTUNE_API_KEY` is set (legacy mode), it grants admin access.

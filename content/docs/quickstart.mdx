@@ -1,0 +1,92 @@
+---
+title: Quickstart
+description: Get up and running with Neptune in under 5 minutes
+---
+
+## Install
+
+```bash title="From source"
+git clone https://github.com/neptune-re/neptune.git
+cd neptune
+cargo build --release
+sudo cp target/release/neptune /usr/local/bin/
+```
+
+```bash title="Docker"
+git clone https://github.com/neptune-re/neptune.git
+cd neptune/docker
+docker compose up --build
+```
+
+<Callout type="info">
+  Requires **Rust 1.83+** for building from source. See [Installation](/installation) for full details.
+</Callout>
+
+## Set up authentication
+
+Neptune uses the Anthropic API for AI-powered analysis. You can authenticate via API key or OAuth:
+
+```bash title="API Key"
+export ANTHROPIC_API_KEY=sk-ant-...
+```
+
+```bash title="OAuth (browser login)"
+neptune login
+```
+
+## Analyze your first binary
+
+Run the full pipeline against a firmware binary:
+
+```bash
+neptune analyze firmware.bin
+```
+
+This runs all seven stages sequentially:
+
+1. **Extraction** — Parse the binary format, extract sections and metadata
+2. **Disassembly** — Disassemble code sections, detect function boundaries
+3. **Quick scan** — String matching, constant detection, compiler identification
+4. **Signature matching** — Match function bytes against the signature database
+5. **AI analysis** — Claude analyzes disassembly for library identification
+6. **SBOM generation** — Produce CycloneDX, SPDX, VEX, HTML, and JSON reports
+7. **Vulnerability correlation** — Check identified components against NVD and OSV
+
+## Output
+
+Neptune generates reports in the current directory (or `--output ./reports`):
+
+| File | Description |
+|---|---|
+| `*-cyclonedx.json` | CycloneDX 1.6 SBOM |
+| `*-spdx.json` | SPDX 2.3 SBOM |
+| `*-vex.json` | VEX vulnerability exploitability document |
+| `*-report.html` | Human-readable HTML report |
+| `*-result.json` | Full analysis result (JSON) |
+
+## Quick scan (no AI)
+
+If you don't need AI analysis, run a quick scan:
+
+```bash
+neptune scan firmware.bin
+```
+
+This skips AI analysis and signature matching, using only string and constant heuristics. Faster but lower confidence.
+
+## Next steps
+
+<Cards>
+  <Card title="CLI Reference" href="/cli/analyze">
+    Full documentation for all CLI commands and flags.
+  </Card>
+  <Card title="Architecture" href="/concepts/architecture">
+    Understand Neptune's crate structure and pipeline design.
+  </Card>
+  <Card title="Configuration" href="/configuration/environment-variables">
+    Environment variables and server configuration.
+  </Card>
+  <Card title="REST API" href="/api-reference/overview">
+    Run Neptune as a service with the web dashboard.
+  </Card>
+</Cards>

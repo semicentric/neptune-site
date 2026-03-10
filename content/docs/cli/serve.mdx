@@ -1,0 +1,52 @@
+---
+title: neptune serve
+description: Start the REST API and web dashboard server
+---
+
+# neptune serve
+
+Starts the Axum HTTP server with the REST API and serves the web dashboard.
+
+## Usage
+
+```bash
+neptune serve [OPTIONS]
+```
+
+## Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `-p, --port <PORT>` | `9090` | Port to listen on |
+| `--host <HOST>` | `0.0.0.0` | Host to bind to |
+| `--data-dir <DIR>` | `./neptune-data` | Data directory for uploads and results |
+| `--tls-cert <FILE>` | | TLS certificate PEM file (enables HTTPS) |
+| `--tls-key <FILE>` | | TLS private key PEM file |
+
+<Callout type="info">
+  `--tls-cert` and `--tls-key` must both be provided to enable HTTPS. If neither is set, the server runs over plain HTTP.
+</Callout>
+
+## Examples
+
+```bash
+# Start on default port
+neptune serve
+
+# Custom port and data directory
+neptune serve --port 8080 --data-dir /var/neptune
+
+# With TLS
+neptune serve --tls-cert cert.pem --tls-key key.pem
+```
+
+## Features
+
+- **OpenAPI docs** at `/api/v1/docs`
+- **Role-based authentication** (admin, analyst, viewer)
+- **Rate limiting** (configurable via `NEPTUNE_RATE_LIMIT_RPM`)
+- **S3-compatible storage** (when `BUCKET_ENDPOINT` is set)
+- **Real-time SSE** progress streaming for analysis jobs
+- **JSON structured logging** (enabled by default for `serve`)
+
+See [Configuration](/configuration/environment-variables) for all server environment variables.

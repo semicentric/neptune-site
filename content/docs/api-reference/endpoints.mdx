@@ -1,0 +1,86 @@
+---
+title: Endpoints
+description: Neptune REST API endpoint reference
+---
+
+# API Endpoints
+
+<Callout type="info">
+  Full interactive API documentation is available at `/api/v1/docs` when running `neptune serve`. The endpoints below are a summary — see the OpenAPI spec for complete request/response schemas.
+</Callout>
+
+## Jobs
+
+### Submit analysis job
+
+```
+POST /api/v1/jobs
+```
+
+Upload a firmware binary for analysis. Returns a job ID for tracking progress.
+
+**Role:** Analyst or Admin
+
+### List jobs
+
+```
+GET /api/v1/jobs
+```
+
+List all analysis jobs with status and metadata.
+
+**Role:** Viewer, Analyst, or Admin
+
+### Get job status
+
+```
+GET /api/v1/jobs/{id}
+```
+
+Get detailed status and results for a specific job.
+
+**Role:** Viewer, Analyst, or Admin
+
+### Stream job progress
+
+```
+GET /api/v1/jobs/{id}/progress
+```
+
+Server-Sent Events (SSE) stream of real-time analysis progress.
+
+**Role:** Viewer, Analyst, or Admin
+
+## Results
+
+### Download SBOM
+
+```
+GET /api/v1/jobs/{id}/sbom?format={format}
+```
+
+Download the generated SBOM in the specified format (`cyclonedx`, `spdx`, `vex`, `html`, `json`).
+
+**Role:** Viewer, Analyst, or Admin
+
+## Signatures
+
+### List signatures
+
+```
+GET /api/v1/signatures
+```
+
+Browse the signature database with filtering and pagination.
+
+**Role:** Viewer, Analyst, or Admin
+
+## Health
+
+### Health check
+
+```
+GET /api/v1/health
+```
+
+Returns server health status. No authentication required.

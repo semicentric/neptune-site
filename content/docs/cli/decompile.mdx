@@ -1,0 +1,50 @@
+---
+title: neptune decompile
+description: AI-powered decompilation of binary functions to C/C++ source
+---
+
+# neptune decompile
+
+Uses Claude to decompile binary functions back to readable C/C++ source code.
+
+<Callout type="warn">
+  This is a **dev-only** feature. Set `NEPTUNE_DEV=1` to enable it.
+</Callout>
+
+## Usage
+
+```bash
+neptune decompile <BINARY> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<BINARY>` | Path to the firmware binary file |
+
+## Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `--function <ADDR>` | | Decompile a specific function at hex address |
+| `--all` | | Decompile all detected functions |
+| `--api-key <KEY>` | | Anthropic API key |
+| `--max-functions <N>` | `50` | Maximum functions to decompile in `--all` mode |
+
+<Callout type="info">
+  You must specify either `--function` or `--all`.
+</Callout>
+
+## Examples
+
+```bash
+# Single function
+NEPTUNE_DEV=1 neptune decompile firmware.bin --function 0x1234
+
+# All functions (up to 50)
+NEPTUNE_DEV=1 neptune decompile firmware.bin --all
+
+# All functions with higher limit
+NEPTUNE_DEV=1 neptune decompile firmware.bin --all --max-functions 200
+```

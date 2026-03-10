@@ -1,0 +1,74 @@
+---
+title: Environment Variables
+description: All configuration options for Neptune
+---
+
+# Environment Variables
+
+Neptune is configured via environment variables and CLI flags. CLI flags take precedence.
+
+## AI / Anthropic
+
+| Variable | Description |
+|---|---|
+| `ANTHROPIC_API_KEY` | Anthropic API key for AI analysis and decompilation |
+
+## Server
+
+| Variable | Default | Description |
+|---|---|---|
+| `NEPTUNE_PORT` | `9090` | Server bind port |
+| `NEPTUNE_DATA_DIR` | `./neptune-data` | Server data directory for uploads and results |
+| `NEPTUNE_CORS_ORIGINS` | `localhost:9090` | Comma-separated allowed CORS origins |
+| `NEPTUNE_RATE_LIMIT_RPM` | `60` | Requests per minute per IP |
+| `NEPTUNE_TRUST_PROXY` | `false` | Trust `X-Forwarded-For` header (set `true` behind reverse proxy) |
+| `NEPTUNE_DEV` | | Set to `1` to enable dev-only endpoints (e.g., `/decompile`) |
+
+## Authentication
+
+| Variable | Description |
+|---|---|
+| `NEPTUNE_API_KEY` | Server API key (legacy, admin role) |
+| `NEPTUNE_ADMIN_KEY` | Admin API key (full access) |
+| `NEPTUNE_ANALYST_KEY` | Analyst API key (read + analyze) |
+| `NEPTUNE_VIEWER_KEY` | Viewer API key (read-only) |
+
+## Object Storage
+
+| Variable | Description |
+|---|---|
+| `BUCKET_ENDPOINT` | S3-compatible endpoint (Railway auto-injects) |
+| `BUCKET_NAME` | S3 bucket name |
+| `BUCKET_REGION` | Bucket region (default: `auto`) |
+| `AWS_ACCESS_KEY_ID` | S3 access key |
+| `AWS_SECRET_ACCESS_KEY` | S3 secret key |
+
+## Signatures
+
+| Variable | Default | Description |
+|---|---|---|
+| `NEPTUNE_SIG_DB` | `./neptune-signatures.db` | Path to signature database file |
+| `NEPTUNE_SIG_REMOTE_URL` | `https://signatures.neptune.dev` | Remote signature server URL |
+
+## Vulnerability Databases
+
+| Variable | Description |
+|---|---|
+| `NVD_API_KEY` | NVD API key for higher rate limits |
+
+## Web Frontend
+
+| Variable | Default | Description |
+|---|---|---|
+| `NEPTUNE_API_URL` | `http://localhost:9090` | Backend API URL for Next.js rewrite |
+| `BETTER_AUTH_SECRET` | | Better Auth session secret |
+| `NEXT_PUBLIC_APP_URL` | `http://localhost:3000` | Public URL of the frontend |
+| `GITHUB_CLIENT_ID` | | GitHub OAuth client ID |
+| `GITHUB_CLIENT_SECRET` | | GitHub OAuth client secret |
+| `NEXT_PUBLIC_GITHUB_APP_SLUG` | `opencode-agent` | GitHub App slug for agent integration |
+
+## Logging
+
+| Variable | Default | Description |
+|---|---|---|
+| `RUST_LOG` | `neptune=info` | Rust log filter (e.g., `neptune=debug`) |

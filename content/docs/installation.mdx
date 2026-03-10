@@ -1,0 +1,80 @@
+---
+title: Installation
+description: Install Neptune from source or Docker
+---
+
+## From source
+
+### Prerequisites
+
+- **Rust 1.83+** — Install via [rustup](https://rustup.rs)
+- **Bun** — Required for the web dashboard (install via [bun.sh](https://bun.sh))
+
+### Build
+
+```bash
+git clone https://github.com/neptune-re/neptune.git
+cd neptune
+cargo build --release
+```
+
+The binary is at `target/release/neptune`. Copy it to your PATH:
+
+```bash
+sudo cp target/release/neptune /usr/local/bin/
+```
+
+### Verify
+
+```bash
+neptune --version
+```
+
+## Docker
+
+Neptune ships with Docker Compose for the full stack (API server + web dashboard):
+
+```bash
+cd docker
+docker compose up --build
+```
+
+This starts the API on port `9090` and the web dashboard on port `3000`.
+
+## Development setup
+
+For local development with hot-reload on both backend and frontend:
+
+```bash
+bun run dev
+```
+
+This runs `cargo run -- serve` and `bun run --cwd web dev` concurrently.
+
+### Backend only
+
+```bash
+cargo build
+cargo test
+bun run dev:api
+```
+
+### Frontend only
+
+```bash
+bun run dev:web
+```
+
+## Key dependencies
+
+| Dependency | Purpose |
+|---|---|
+| [goblin](https://crates.io/crates/goblin) | Binary parsing (ELF, PE, Mach-O) |
+| [capstone](https://crates.io/crates/capstone) | Multi-architecture disassembly |
+| [clap](https://crates.io/crates/clap) | CLI argument parsing |
+| [axum](https://crates.io/crates/axum) | HTTP server framework |
+| [axum-server](https://crates.io/crates/axum-server) | TLS support (rustls) |
+| [rusqlite](https://crates.io/crates/rusqlite) | Signature database |
+| [tokio](https://crates.io/crates/tokio) | Async runtime |
+| [reqwest](https://crates.io/crates/reqwest) | HTTP client (NVD, OSV, Anthropic) |
+| [utoipa](https://crates.io/crates/utoipa) | OpenAPI documentation |

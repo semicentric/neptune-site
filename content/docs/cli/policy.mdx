@@ -1,0 +1,41 @@
+---
+title: neptune policy
+description: Evaluate a security policy against analysis results
+---
+
+# neptune policy
+
+Evaluates a policy file (TOML or JSON) against a Neptune analysis result. Returns pass/fail with deny and warn counts. Exits with code 1 on failure — useful for CI/CD gates.
+
+## Usage
+
+```bash
+neptune policy <POLICY_FILE> <RESULT_FILE> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<POLICY_FILE>` | Path to the policy file (TOML or JSON) |
+| `<RESULT_FILE>` | Path to the analysis result JSON file |
+
+## Options
+
+| Flag | Description |
+|---|---|
+| `--json` | Output as JSON instead of human-readable |
+
+## Examples
+
+```bash
+neptune policy security-policy.toml analysis-result.json
+neptune policy policy.json result.json --json
+```
+
+## Exit codes
+
+| Code | Meaning |
+|---|---|
+| `0` | Policy passed |
+| `1` | Policy failed (deny rules triggered) |

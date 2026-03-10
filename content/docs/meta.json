@@ -1,0 +1,20 @@
+{
+  "title": "Neptune",
+  "pages": [
+    "index",
+    "quickstart",
+    "installation",
+    "---Getting Started---",
+    "...concepts",
+    "---CLI Reference---",
+    "...cli",
+    "---Configuration---",
+    "...configuration",
+    "---Deployment---",
+    "...deployment",
+    "---API Reference---",
+    "...api-reference",
+    "---Integrations---",
+    "...integrations"
+  ]
+}

@@ -1,0 +1,28 @@
+---
+title: neptune login
+description: Authenticate with Anthropic via browser OAuth
+---
+
+# neptune login
+
+Opens a browser for Anthropic OAuth authentication. Credentials are stored locally and used automatically by AI-powered commands.
+
+## Usage
+
+```bash
+neptune login
+```
+
+## Credential resolution order
+
+Neptune resolves Anthropic credentials in this order:
+
+1. `--api-key` flag (per-command)
+2. `ANTHROPIC_API_KEY` environment variable
+3. Stored OAuth credentials (from `neptune login`)
+
+## Notes
+
+- Credentials are saved to `~/.config/neptune/credentials.json` (or platform equivalent)
+- OAuth tokens are automatically refreshed when expired
+- Use `ANTHROPIC_API_KEY` env var for CI/CD environments where browser login isn't possible

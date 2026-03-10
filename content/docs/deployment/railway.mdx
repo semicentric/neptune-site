@@ -1,0 +1,35 @@
+---
+title: Railway
+description: Deploy Neptune on Railway
+---
+
+# Railway Deployment
+
+Neptune includes a `railway.toml` for one-click deployment on [Railway](https://railway.app).
+
+## Setup
+
+1. Fork the [Neptune repository](https://github.com/neptune-re/neptune)
+2. Create a new Railway project and link the repo
+3. Add environment variables in the Railway dashboard:
+   - `ANTHROPIC_API_KEY`
+   - `NEPTUNE_ADMIN_KEY`
+   - `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET`
+4. Attach a Railway Bucket for S3-compatible object storage (auto-injects `BUCKET_ENDPOINT`, `BUCKET_NAME`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`)
+5. Deploy
+
+## Object storage
+
+When `BUCKET_ENDPOINT` is set, Neptune stores uploads and results in S3-compatible storage instead of local disk. Railway Buckets auto-inject the required environment variables when attached.
+
+## CORS
+
+Set `NEPTUNE_CORS_ORIGINS` to your Vercel or frontend URL:
+
+```
+NEPTUNE_CORS_ORIGINS=https://neptune.vercel.app
+```
+
+## Reverse proxy
+
+Set `NEPTUNE_TRUST_PROXY=true` so rate limiting uses the real client IP from `X-Forwarded-For`.

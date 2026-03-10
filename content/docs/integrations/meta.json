@@ -1,0 +1,4 @@
+{
+  "title": "Integrations",
+  "pages": ["web-dashboard", "neptune-agent", "ci-cd"]
+}

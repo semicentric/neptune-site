@@ -1,0 +1,47 @@
+---
+title: Docker
+description: Deploy Neptune with Docker Compose
+---
+
+# Docker Deployment
+
+Neptune ships with Docker configuration for running the full stack.
+
+## Quick start
+
+```bash
+cd docker
+docker compose up --build
+```
+
+This starts:
+- **API server** on port `9090`
+- **Web dashboard** on port `3000`
+
+## Configuration
+
+Pass environment variables via `.env` file or `docker-compose.yml`:
+
+```bash
+cp .env.example .env
+# Edit .env with your values
+```
+
+Key variables to set:
+- `ANTHROPIC_API_KEY` — Required for AI features
+- `NEPTUNE_ADMIN_KEY` — API authentication
+- `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` — Web dashboard OAuth
+
+## Signature generation
+
+A separate `Dockerfile.siggen` is provided for generating signatures from Debian packages:
+
+```bash
+docker build -f Dockerfile.siggen -t neptune-siggen .
+docker run neptune-siggen
+```
+
+## Volumes
+
+- `./neptune-data` — Persistent storage for uploads and analysis results
+- `./neptune-signatures.db` — Signature database

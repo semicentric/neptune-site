@@ -1,0 +1,61 @@
+---
+title: Neptune Agent
+description: GitHub Action for AI-assisted build-fix iteration
+---
+
+# Neptune Agent
+
+A GitHub Action that iterates on rebuilt firmware projects with an AI agent until they compile and pass tests.
+
+## How it works
+
+1. Attempts to build the project (`make`, `cmake`, or `gcc`)
+2. If the build fails, sends errors to an AI agent for fixing
+3. Commits fixes and retries
+4. If the build succeeds, runs tests
+5. If tests fail or don't exist, asks the agent to fix/create them
+6. Repeats until everything passes or max iterations is reached
+
+## Usage
+
+```yaml
+- uses: neptune-re/neptune@main
+  with:
+    model: "anthropic/claude-sonnet-4-20250514"
+    max_iterations: 20
+    goal: "Build the project, fix all compilation errors, add basic tests, iterate until CI passes"
+  env:
+    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+```
+
+## Inputs
+
+| Input | Default | Description |
+|---|---|---|
+| `model` | `anthropic/claude-sonnet-4-20250514` | AI model to use (format: `provider/model`) |
+| `max_iterations` | `20` | Maximum build-fix cycles |
+| `goal` | Build, fix, test | Custom goal for the agent |
+
+## Environment
+
+| Variable | Required | Description |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | Yes | Anthropic API key for the AI agent |
+
+## Typical workflow
+
+Neptune Agent is designed to run after `neptune rebuild` pushes a decompiled project to a new repository:
+
+```yaml
+name: Neptune Agent
+on: [push]
+
+jobs:
+  build-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: neptune-re/neptune@main
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+```

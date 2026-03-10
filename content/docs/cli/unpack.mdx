@@ -1,0 +1,43 @@
+---
+title: neptune unpack
+description: Extract files from firmware container images
+---
+
+# neptune unpack
+
+Unpacks firmware container images, extracting embedded filesystems and files. Supports nested containers with configurable recursion depth.
+
+## Usage
+
+```bash
+neptune unpack <FIRMWARE> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<FIRMWARE>` | Path to the firmware image |
+
+## Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `-o, --output <DIR>` | `./neptune-unpacked` | Output directory for extracted files |
+| `--max-depth <N>` | `5` | Maximum recursion depth for nested containers |
+
+## Supported formats
+
+- SquashFS
+- JFFS2
+- CramFS
+- CPIO
+- UBI
+- Android Boot
+
+## Examples
+
+```bash
+neptune unpack router-firmware.img
+neptune unpack firmware.bin --output ./extracted --max-depth 3
+```

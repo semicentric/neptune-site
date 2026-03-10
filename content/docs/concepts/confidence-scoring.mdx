@@ -1,0 +1,34 @@
+---
+title: Confidence Scoring
+description: How Neptune scores and merges identification evidence
+---
+
+# Confidence Scoring
+
+Every identification source in Neptune produces evidence with a confidence score between 0.0 and 1.0.
+
+## Sources and typical ranges
+
+| Source | Typical Confidence | Description |
+|---|---|---|
+| String match (exact version) | 0.8–0.95 | Version string like `OpenSSL 1.1.1w` found in binary |
+| String match (partial) | 0.4–0.7 | Library name without version, or ambiguous strings |
+| Constant detection | 0.6–0.85 | Known magic numbers or lookup tables |
+| Signature fingerprint | 0.7–0.95 | Function byte patterns matching the database |
+| AI analysis | 0.3–0.9 | Claude's identification from disassembly patterns |
+| Compiler ID | 0.8–0.95 | Compiler identification from embedded signatures |
+
+## Merge strategy
+
+When multiple sources identify the same library:
+
+1. **Deduplication** — Components matching the same library name are grouped
+2. **Best confidence wins** — The highest confidence score is kept
+3. **Cross-correlation boost** — When two or more independent sources agree, confidence is boosted
+4. **Threshold filter** — Only components above `--min-confidence` (default: 0.3) are included in the final SBOM
+
+## Tuning
+
+- Use `--min-confidence 0.5` for higher-precision results (fewer false positives)
+- Use `--min-confidence 0.1` for maximum recall (more components, more noise)
+- Use `--no-ai` to rely only on deterministic methods (strings, constants, signatures)
