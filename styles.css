@@ -221,11 +221,18 @@ h1 {
     position: relative;
     white-space: nowrap;
     text-align: left;
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    overflow: hidden;
+}
+
+.install [torph-root] {
     font-size: 0.78rem;
     font-weight: 300;
     letter-spacing: 0.01em;
     color: var(--text-bright);
-    overflow: hidden;
 }
 
 [torph-item] {
@@ -351,7 +358,7 @@ h1 {
         flex-shrink: 0;
     }
 
-    [torph-root] { font-size: clamp(0.7rem, 3vw, 0.85rem); }
+    .install [torph-root] { font-size: clamp(0.7rem, 3vw, 0.85rem); }
     .links a, .links .link-btn { font-size: clamp(0.7rem, 3vw, 0.85rem); padding: 0 3.5vw; }
     .links a:first-child { padding-left: 0; }
     .links .link-btn:last-child { padding-right: 0; }

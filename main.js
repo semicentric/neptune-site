@@ -73,166 +73,169 @@ function nearestAnchor(idx, ids, persistent, dir) {
     return search('back') || search('fwd');
 }
 
-var morphEl = document.getElementById('morphText');
-morphEl.setAttribute('torph-root', '');
-var currentText = '';
-var prevMeasures = {};
-var isFirst = true;
+function createMorph(el) {
+    el.setAttribute('torph-root', '');
+    var state = { currentText: '', prevMeasures: {}, isFirst: true };
 
-function morphUpdate(value) {
-    if (value === currentText) return;
-    currentText = value;
+    function update(value) {
+        if (value === state.currentText) return;
+        state.currentText = value;
 
-    var segments = segmentText(value);
-    prevMeasures = measureChildren(morphEl);
+        var segments = segmentText(value);
+        state.prevMeasures = measureChildren(el);
 
-    var oldChildren = Array.from(morphEl.children);
-    var newIds = {};
-    segments.forEach(function(s) { newIds[s.id] = true; });
+        var oldChildren = Array.from(el.children);
+        var newIds = {};
+        segments.forEach(function(s) { newIds[s.id] = true; });
 
-    var exiting = [];
-    var exitingSet = new Set();
-    oldChildren.forEach(function(child) {
-        var id = child.getAttribute('torph-id');
-        if (!newIds[id] && !child.hasAttribute('torph-exiting')) {
-            exiting.push(child);
-            exitingSet.add(child);
+        var exiting = [];
+        var exitingSet = new Set();
+        oldChildren.forEach(function(child) {
+            var id = child.getAttribute('torph-id');
+            if (!newIds[id] && !child.hasAttribute('torph-exiting')) {
+                exiting.push(child);
+                exitingSet.add(child);
+            }
+        });
+
+        var oldIds = oldChildren.map(function(c) { return c.getAttribute('torph-id'); });
+        var persistentOld = {};
+        oldIds.forEach(function(id, i) {
+            if (newIds[id] && !exitingSet.has(oldChildren[i])) persistentOld[id] = true;
+        });
+
+        var exitAnchorMap = new Map();
+        exiting.forEach(function(child) {
+            var idx = oldChildren.indexOf(child);
+            exitAnchorMap.set(child, nearestAnchor(idx, oldIds, persistentOld, 'fwd'));
+        });
+
+        var snapshots = exiting.map(function(child) {
+            var tr = parseTranslate(child);
+            var op = Number(getComputedStyle(child).opacity) || 1;
+            child.getAnimations().forEach(function(a) { a.cancel(); });
+            return { left: child.offsetLeft + tr.tx, top: child.offsetTop + tr.ty, width: child.offsetWidth, height: child.offsetHeight, opacity: op };
+        });
+        exiting.forEach(function(child, i) {
+            var s = snapshots[i];
+            child.setAttribute('torph-exiting', '');
+            child.style.position = 'absolute';
+            child.style.pointerEvents = 'none';
+            child.style.left = s.left + 'px';
+            child.style.top = s.top + 'px';
+            child.style.width = s.width + 'px';
+            child.style.height = s.height + 'px';
+            child.style.opacity = String(s.opacity);
+        });
+
+        var reusable = {};
+        oldChildren.forEach(function(child) {
+            var id = child.getAttribute('torph-id');
+            if (newIds[id] && !child.hasAttribute('torph-exiting')) {
+                reusable[id] = child;
+                child.remove();
+            }
+        });
+
+        Array.from(el.childNodes).forEach(function(node) {
+            if (node.nodeType === Node.TEXT_NODE) node.remove();
+        });
+
+        segments.forEach(function(seg) {
+            var existing = reusable[seg.id];
+            if (existing) {
+                existing.textContent = seg.string;
+                el.appendChild(existing);
+            } else {
+                var span = document.createElement('span');
+                span.setAttribute('torph-item', '');
+                span.setAttribute('torph-id', seg.id);
+                span.textContent = seg.string;
+                el.appendChild(span);
+            }
+        });
+
+        var currentMeasures = measureChildren(el);
+
+        exiting.forEach(function(child) {
+            if (state.isFirst) { child.remove(); return; }
+            var anchor = exitAnchorMap.get(child);
+            var d = anchor ? delta(currentMeasures, state.prevMeasures, anchor) : { dx: 0, dy: 0 };
+
+            child.animate({ transform: 'translate(' + d.dx + 'px,' + d.dy + 'px) scale(0.95)', offset: 1 }, { duration: DURATION, easing: EASE, fill: 'both' });
+            var fade = child.animate({ opacity: 0, offset: 1 }, { duration: fadeDur(0.25), easing: 'linear', fill: 'both' });
+            fade.onfinish = function() { child.remove(); };
+        });
+
+        if (state.isFirst) {
+            state.isFirst = false;
+            return;
         }
-    });
 
-    var oldIds = oldChildren.map(function(c) { return c.getAttribute('torph-id'); });
-    var persistentOld = {};
-    oldIds.forEach(function(id, i) {
-        if (newIds[id] && !exitingSet.has(oldChildren[i])) persistentOld[id] = true;
-    });
+        var segIds = segments.map(function(s) { return s.id; });
+        var persistentNew = {};
+        segIds.forEach(function(id) { if (state.prevMeasures[id]) persistentNew[id] = true; });
 
-    var exitAnchor = new Map();
-    exiting.forEach(function(child) {
-        var idx = oldChildren.indexOf(child);
-        exitAnchor.set(child, nearestAnchor(idx, oldIds, persistentOld, 'fwd'));
-    });
+        var children = Array.from(el.children);
+        children.forEach(function(child, i) {
+            if (child.hasAttribute('torph-exiting')) return;
+            var key = child.getAttribute('torph-id') || 'c-' + i;
+            var isNew = !state.prevMeasures[key];
 
-    var snapshots = exiting.map(function(child) {
-        var tr = parseTranslate(child);
-        var op = Number(getComputedStyle(child).opacity) || 1;
-        child.getAnimations().forEach(function(a) { a.cancel(); });
-        return { left: child.offsetLeft + tr.tx, top: child.offsetTop + tr.ty, width: child.offsetWidth, height: child.offsetHeight, opacity: op };
-    });
-    exiting.forEach(function(child, i) {
-        var s = snapshots[i];
-        child.setAttribute('torph-exiting', '');
-        child.style.position = 'absolute';
-        child.style.pointerEvents = 'none';
-        child.style.left = s.left + 'px';
-        child.style.top = s.top + 'px';
-        child.style.width = s.width + 'px';
-        child.style.height = s.height + 'px';
-        child.style.opacity = String(s.opacity);
-    });
+            var dKey = isNew ? nearestAnchor(segIds.indexOf(key), segIds, persistentNew, 'back') : key;
+            var d = dKey ? delta(state.prevMeasures, currentMeasures, dKey) : { dx: 0, dy: 0 };
 
-    var reusable = {};
-    oldChildren.forEach(function(child) {
-        var id = child.getAttribute('torph-id');
-        if (newIds[id] && !child.hasAttribute('torph-exiting')) {
-            reusable[id] = child;
-            child.remove();
-        }
-    });
+            var prev = cancelAnims(child);
+            var sx = d.dx + prev.tx;
+            var sy = d.dy + prev.ty;
+            var startOp = (isNew && prev.opacity >= 1) ? 0 : prev.opacity;
 
-    Array.from(morphEl.childNodes).forEach(function(node) {
-        if (node.nodeType === Node.TEXT_NODE) node.remove();
-    });
+            child.animate([
+                { transform: 'translate(' + sx + 'px,' + sy + 'px) scale(' + (isNew ? 0.95 : 1) + ')' },
+                { transform: 'none' }
+            ], { duration: DURATION, easing: EASE, fill: 'both' });
 
-    segments.forEach(function(seg) {
-        var existing = reusable[seg.id];
-        if (existing) {
-            existing.textContent = seg.string;
-            morphEl.appendChild(existing);
-        } else {
-            var span = document.createElement('span');
-            span.setAttribute('torph-item', '');
-            span.setAttribute('torph-id', seg.id);
-            span.textContent = seg.string;
-            morphEl.appendChild(span);
-        }
-    });
-
-    var currentMeasures = measureChildren(morphEl);
-
-    exiting.forEach(function(child) {
-        if (isFirst) { child.remove(); return; }
-        var anchor = exitAnchor.get(child);
-        var d = anchor ? delta(currentMeasures, prevMeasures, anchor) : { dx: 0, dy: 0 };
-
-        child.animate({ transform: 'translate(' + d.dx + 'px,' + d.dy + 'px) scale(0.95)', offset: 1 }, { duration: DURATION, easing: EASE, fill: 'both' });
-        var fade = child.animate({ opacity: 0, offset: 1 }, { duration: fadeDur(0.25), easing: 'linear', fill: 'both' });
-        fade.onfinish = function() { child.remove(); };
-    });
-
-    if (isFirst) {
-        isFirst = false;
-        return;
+            if (startOp < 1) {
+                child.animate(
+                    [{ opacity: startOp }, { opacity: 1 }],
+                    { duration: fadeDur(isNew ? 0.5 : 0.25), delay: isNew ? fadeDur(0.25) : 0, easing: 'linear', fill: 'both' }
+                );
+            }
+        });
     }
 
-    var segIds = segments.map(function(s) { return s.id; });
-    var persistentNew = {};
-    segIds.forEach(function(id) { if (prevMeasures[id]) persistentNew[id] = true; });
-
-    var children = Array.from(morphEl.children);
-    children.forEach(function(child, i) {
-        if (child.hasAttribute('torph-exiting')) return;
-        var key = child.getAttribute('torph-id') || 'c-' + i;
-        var isNew = !prevMeasures[key];
-
-        var dKey = isNew ? nearestAnchor(segIds.indexOf(key), segIds, persistentNew, 'back') : key;
-        var d = dKey ? delta(prevMeasures, currentMeasures, dKey) : { dx: 0, dy: 0 };
-
-        var prev = cancelAnims(child);
-        var sx = d.dx + prev.tx;
-        var sy = d.dy + prev.ty;
-        var startOp = (isNew && prev.opacity >= 1) ? 0 : prev.opacity;
-
-        child.animate([
-            { transform: 'translate(' + sx + 'px,' + sy + 'px) scale(' + (isNew ? 0.95 : 1) + ')' },
-            { transform: 'none' }
-        ], { duration: DURATION, easing: EASE, fill: 'both' });
-
-        if (startOp < 1) {
-            child.animate(
-                [{ opacity: startOp }, { opacity: 1 }],
-                { duration: fadeDur(isNew ? 0.5 : 0.25), delay: isNew ? fadeDur(0.25) : 0, easing: 'linear', fill: 'both' }
-            );
-        }
-    });
-
-
+    return update;
 }
 
-morphUpdate('cargo install neptune');
+var installMorph = createMorph(document.getElementById('morphText'));
+installMorph('cargo install neptune');
 
 var morphTimeout = null;
 document.getElementById('installBtn').addEventListener('click', function () {
     var btn = this;
     navigator.clipboard.writeText('cargo install neptune').then(function () {
         if (morphTimeout) clearTimeout(morphTimeout);
-        morphUpdate('copied');
+        installMorph('copied');
         btn.classList.add('copied');
         morphTimeout = setTimeout(function () {
-            morphUpdate('cargo install neptune');
+            installMorph('cargo install neptune');
             btn.classList.remove('copied');
             morphTimeout = null;
         }, 1600);
     });
 });
 
+var contactMorph = createMorph(document.getElementById('contactMorphText'));
+contactMorph('Contact');
+
 var contactBtn = document.getElementById('contactBtn');
 var contactTimeout = null;
 contactBtn.addEventListener('click', function () {
     navigator.clipboard.writeText('plyght@semicentric.co').then(function () {
         if (contactTimeout) clearTimeout(contactTimeout);
-        contactBtn.textContent = 'copied';
+        contactMorph('copied');
         contactTimeout = setTimeout(function () {
-            contactBtn.textContent = 'Contact';
+            contactMorph('Contact');
             contactTimeout = null;
         }, 1600);
     });
