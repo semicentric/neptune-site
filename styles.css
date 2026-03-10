@@ -116,6 +116,10 @@ a[href*="unicorn.studio?utm_source=public-url"] {
     color: var(--text-bright);
 }
 
+.attribution-mobile {
+    display: none;
+}
+
 h1 {
     font-family: var(--serif);
     font-size: clamp(4.5rem, 9vw, 8rem);
@@ -349,6 +353,7 @@ h1 {
     }
 
     .attribution { display: none; }
+    .attribution-mobile { display: inline; }
 
     h1 { font-size: clamp(3.5rem, 16vw, 5rem); }
 
