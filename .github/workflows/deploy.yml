@@ -1,0 +1,49 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch version from neptune repo
+        env:
+          GH_TOKEN: ${{ secrets.NEPTUNE_PAT }}
+        run: |
+          VERSION=$(curl -sf \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github.v3.raw" \
+            "https://api.github.com/repos/neptune-re/neptune/contents/Cargo.toml" \
+            | grep '^version' | head -1 | sed 's/.*"\(.*\)".*/\1/')
+          if [ -n "$VERSION" ]; then
+            sed -i "s|<p class=\"version\">v[^<]*</p>|<p class=\"version\">v${VERSION}</p>|" index.html
+            echo "Updated version to v${VERSION}"
+          else
+            echo "Failed to fetch version, keeping existing"
+          fi
+
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - uses: actions/deploy-pages@v4
+        id: deployment
