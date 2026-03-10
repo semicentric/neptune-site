@@ -41,6 +41,12 @@ jobs:
             echo "Failed to fetch version, keeping existing"
           fi
 
+      - name: Cache-bust assets with commit hash
+        run: |
+          HASH=$(git rev-parse --short HEAD)
+          sed -i "s|href=\"styles.css\"|href=\"styles.css?v=${HASH}\"|" index.html
+          sed -i "s|src=\"main.js\"|src=\"main.js?v=${HASH}\"|" index.html
+
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -26,6 +26,7 @@ body {
     overflow: hidden;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    cursor: default;
 }
 
 @media (prefers-color-scheme: light) {
@@ -259,6 +260,7 @@ h1 {
     padding: 0 14px;
     border-right: 0.5px solid var(--border);
     transition: color 0.2s ease;
+    cursor: pointer;
 }
 
 .links a:last-child { border-right: none; padding-right: 0; }
