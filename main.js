@@ -224,3 +224,16 @@ document.getElementById('installBtn').addEventListener('click', function () {
         }, 1600);
     });
 });
+
+var contactBtn = document.getElementById('contactBtn');
+var contactTimeout = null;
+contactBtn.addEventListener('click', function () {
+    navigator.clipboard.writeText('plyght@semicentric.co').then(function () {
+        if (contactTimeout) clearTimeout(contactTimeout);
+        contactBtn.textContent = 'copied';
+        contactTimeout = setTimeout(function () {
+            contactBtn.textContent = 'Contact';
+            contactTimeout = null;
+        }, 1600);
+    });
+});

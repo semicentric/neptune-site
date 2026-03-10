@@ -263,8 +263,22 @@ h1 {
     cursor: pointer;
 }
 
-.links a:last-child { border-right: none; padding-right: 0; }
-.links a:hover { color: var(--text-bright); }
+.links a:last-child, .links .link-btn:last-child { border-right: none; padding-right: 0; }
+.links a:hover, .links .link-btn:hover { color: var(--text-bright); }
+
+.link-btn {
+    background: none;
+    border: none;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+    padding: 0 14px;
+    border-right: 0.5px solid var(--border);
+    transition: color 0.2s ease;
+    cursor: pointer;
+}
 
 @keyframes revealLeft {
     from { opacity: 0; transform: translateX(-20px); }
@@ -295,44 +309,47 @@ h1 {
 
     .left {
         width: 100%;
-        height: auto;
+        height: 28dvh;
         flex-shrink: 0;
-        align-items: flex-start;
+        align-items: center;
         justify-content: center;
+        overflow: hidden;
+        background: var(--bg);
     }
 
     #unicorn-bg {
-        inset: -20px;
-        width: calc(100% + 40px);
-        height: calc(100% + 40px);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.32);
+        transform-origin: center center;
+        width: 200vw;
+        height: 200vw;
+        opacity: 0.3;
     }
 
     .left-content {
-        padding: calc(2dvh + var(--safe-top)) 5vw 1.5dvh;
+        padding: calc(var(--safe-top) + 16px) 5vw 0;
     }
 
-    #unicorn-bg {
-        opacity: 0.35;
-    }
+    h1 { font-size: clamp(3.5rem, 16vw, 5rem); }
 
-    h1 { font-size: clamp(2.8rem, 13vw, 4.5rem); }
-
-    .version { margin-top: 0.8dvh; font-size: clamp(0.55rem, 2vw, 0.65rem); }
+    .version { margin-top: 6px; font-size: 0.65rem; }
 
     .divider { display: none; }
 
     .right {
         width: 100%;
-        padding: 2.5dvh 5vw calc(2.5dvh + var(--safe-bottom));
+        padding: 3.5dvh 6vw calc(3dvh + var(--safe-bottom));
         flex: 1;
         min-height: 0;
         border-top: 0.5px solid var(--border);
     }
 
-    .right-center { gap: 2dvh; flex: 1; min-height: 0; }
+    .right-center { gap: 3dvh; flex: 1; min-height: 0; }
 
     .descriptor {
-        font-size: clamp(0.85rem, 3vw, 1.05rem);
+        font-size: clamp(0.95rem, 4vw, 1.15rem);
         line-height: 1.5;
         max-width: none;
     }
@@ -340,17 +357,19 @@ h1 {
 
     .right-mid { flex-shrink: 0; }
 
-    .capability { padding: 0.8dvh 0; }
-    .cap-label { width: 18vw; font-size: clamp(0.55rem, 2vw, 0.65rem); }
-    .cap-value { font-size: clamp(0.75rem, 2.5vw, 0.9rem); }
+    .capability { padding: 1dvh 0; }
+    .cap-label { width: 20vw; font-size: clamp(0.65rem, 3vw, 0.8rem); }
+    .cap-value { font-size: clamp(0.85rem, 3.8vw, 1.05rem); }
 
     .right-bottom {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1.5dvh;
+        gap: 2dvh;
         flex-shrink: 0;
     }
 
-    .links a { font-size: clamp(0.5rem, 1.6vw, 0.64rem); padding: 0 2.5vw; }
+    [torph-root] { font-size: clamp(0.7rem, 3vw, 0.85rem); }
+    .links a, .links .link-btn { font-size: clamp(0.7rem, 3vw, 0.85rem); padding: 0 3.5vw; }
     .links a:first-child { padding-left: 0; }
+    .links .link-btn:last-child { padding-right: 0; }
 }
