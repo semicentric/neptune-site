@@ -1,0 +1,43 @@
+---
+title: neptune analyze-image
+description: Analyze a full firmware image — unpack, scan all binaries, and generate a unified SBOM
+---
+
+# neptune analyze-image
+
+Unpacks a firmware image, scans every binary inside, and merges results into a single unified SBOM.
+
+## Usage
+
+```bash
+neptune analyze-image <FIRMWARE> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<FIRMWARE>` | Path to the firmware image |
+
+## Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `-o, --output <DIR>` | `.` | Output directory for reports |
+| `-f, --format <FORMAT>` | `all` | Output formats: `cyclonedx`, `spdx`, `html`, `json`, `vex`, `sarif`, `all` |
+| `--max-binaries <N>` | `50` | Maximum number of binaries to analyze |
+| `--min-confidence <FLOAT>` | `0.3` | Minimum confidence threshold (0.0–1.0) |
+| `--json` | | Output results as JSON to stdout |
+
+## Examples
+
+```bash
+# Analyze full firmware image
+neptune analyze-image firmware.img --format all --output ./reports
+
+# Limit to 20 binaries, CycloneDX only
+neptune analyze-image firmware.img --max-binaries 20 --format cyclonedx
+
+# JSON output for CI
+neptune analyze-image firmware.img --json
+```

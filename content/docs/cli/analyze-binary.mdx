@@ -1,0 +1,51 @@
+---
+title: neptune analyze-binary
+description: Deep binary analysis — decompile, deobfuscate, synthesize, and export
+---
+
+# neptune analyze-binary
+
+Performs deep analysis on a binary: decompilation of all detected functions, optional deobfuscation, cross-function synthesis, and structured export of results.
+
+## Usage
+
+```bash
+neptune analyze-binary <BINARY> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<BINARY>` | Path to the binary |
+
+## Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `-o, --output <DIR>` | `.` | Output directory for results |
+| `--api-key <KEY>` | | Anthropic API key |
+| `--max-functions <N>` | `100` | Maximum functions to analyze |
+| `--decompiler <MODE>` | `auto` | Decompiler backend: `ai`, `ghidra`, `auto` |
+| `--no-deobfuscate` | | Skip deobfuscation pass |
+| `--no-synthesis` | | Skip cross-function synthesis pass |
+
+## Examples
+
+```bash
+# Full deep analysis
+neptune analyze-binary firmware.bin --output ./analysis
+
+# AI decompiler only, skip deobfuscation
+neptune analyze-binary firmware.bin --decompiler ai --no-deobfuscate
+
+# Limit function count
+neptune analyze-binary firmware.bin --max-functions 50 --output ./analysis
+```
+
+## Output
+
+| File | Description |
+|---|---|
+| `analysis.json` | Structured JSON with all decompiled functions, metadata, and notes |
+| `decompiled.c` | Combined C source output for all analyzed functions |

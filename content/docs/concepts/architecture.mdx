@@ -5,83 +5,53 @@ description: Neptune's crate structure and system design
 
 # Architecture
 
-Neptune is a Rust workspace with 17 crates, each responsible for a distinct stage of the reverse engineering pipeline.
+Neptune is a modular Rust application with distinct stages for each part of the reverse engineering pipeline.
 
-## Crate map
+## Capabilities
 
-```
-crates/
-  neptune-core/           Core types, error handling, pipeline traits, config
-  neptune-extract/        Binary parsing (goblin) and section extraction
-  neptune-disasm/         Disassembly and function detection (capstone)
-  neptune-scan/           String/constant/compiler heuristic scanning
-  neptune-fingerprint/    SQLite signature database and function matching
-  neptune-ai/             Claude API client, OAuth, credential storage
-  neptune-decompile/      AI-powered decompilation to C/C++
-  neptune-rebuild/        Binary rebuild with iterative refinement
-  neptune-port/           Cross-platform porting to different target triples
-  neptune-sbom/           CycloneDX, SPDX, VEX, HTML, JSON output
-  neptune-vuln/           NVD and OSV vulnerability correlation
-  neptune-server/         Axum REST API with auth, TLS, storage, OpenAPI
-  neptune-cli/            CLI orchestration and progress display
-  neptune-unpack/         Firmware container extraction (squashfs, jffs2, etc.)
-  neptune-policy/         Policy evaluation engine
-  neptune-siggen/         Signature generation from compiled libraries
-  neptune-compliance/     Regulatory compliance checking
-
-web/                      Next.js dashboard (Better Auth, GitHub OAuth)
-neptune-agent/            GitHub Action for AI-assisted build-fix iteration
-```
+| Stage | Description |
+|---|---|
+| **Extraction** | Parse ELF, PE, and Mach-O binaries with entropy analysis and section mapping |
+| **Disassembly** | Multi-architecture disassembly for x86, x86_64, ARM, AArch64, MIPS, RISC-V, PowerPC |
+| **Scanning** | String matching, constant detection, compiler identification |
+| **Fingerprinting** | Match functions against a signature database |
+| **AI analysis** | AI-powered library identification from disassembly patterns |
+| **Decompilation** | Decompile binary functions back to readable C/C++ source |
+| **Devirtualization** | Symbolic lifting of obfuscated x86/x64 PE binaries with automatic obfuscation detection |
+| **Deobfuscation** | Detect and clean obfuscation patterns in decompiled source |
+| **Synthesis** | Cross-function semantic analysis to recover globals, structs, and refined names |
+| **Rebuild** | Export decompiled functions as a buildable C project with iterative refinement |
+| **Porting** | Port verified rebuilt source to a different target platform |
+| **Firmware unpacking** | Recursively extract SquashFS, JFFS2, CramFS, CPIO, UBI, Android boot images |
+| **SBOM generation** | CycloneDX 1.6, SPDX 2.3, VEX, SARIF, HTML, JSON output |
+| **Vulnerability correlation** | Cross-reference components against NVD and OSV |
+| **Malware triage** | YARA scanning, capa detection, signal ranking, behavior hypothesis generation |
+| **Policy engine** | Rule-based gating with severity thresholds and banned components |
+| **License compliance** | Copyleft detection, license distribution analysis |
+| **Attestation** | In-toto/DSSE envelopes with optional cosign signing |
 
 ## Data flow
 
 ```
-Binary File
-    │
-    ▼
-┌──────────────┐
-│  Extract     │  goblin: ELF/PE/Mach-O parsing
-│  (neptune-   │  Sections, symbols, strings, metadata
-│   extract)   │
-└──────┬───────┘
-       │ BinaryImage
-       ▼
-┌──────────────┐
-│  Disassemble │  capstone: multi-arch disassembly
-│  (neptune-   │  Function detection, CFG, basic blocks
-│   disasm)    │
-└──────┬───────┘
-       │ DisassemblyResult
-       ▼
-┌──────────────────────────────────────────────┐
-│  Identification Layer (parallel evidence)     │
-│                                               │
-│  ┌─────────┐  ┌──────────────┐  ┌─────────┐ │
-│  │  Scan   │  │ Fingerprint  │  │   AI    │ │
-│  │ strings │  │  signatures  │  │ Claude  │ │
-│  │ consts  │  │  SQLite DB   │  │ analysis│ │
-│  └────┬────┘  └──────┬───────┘  └────┬────┘ │
-│       │              │               │       │
-│       └──────────────┼───────────────┘       │
-│                      │                       │
-│              Merge + Deduplicate             │
-│         (confidence-weighted scoring)        │
-└──────────────────────┬───────────────────────┘
-                       │ Vec<IdentifiedComponent>
-                       ▼
-              ┌────────────────┐
-              │  SBOM + Vuln   │
-              │  CycloneDX     │
-              │  SPDX / VEX    │
-              │  NVD + OSV     │
-              └────────────────┘
+Binary / Firmware Image
+         │
+         ▼
+     Extraction
+         │
+         ▼
+     Disassembly
+         │
+         ▼
+  ┌──────┼──────┐
+  │      │      │
+Scan  Fingerprint  AI
+  │      │      │
+  └──────┼──────┘
+         │
+    Merge + Score
+         │
+         ▼
+   SBOM + Vulnerabilities
 ```
 
-## Identification merge
-
-Results from Scanner, Fingerprinter, and AI Analyzer are merged using confidence-weighted deduplication:
-
-- Each identification source produces `IdentifiedComponent` structs with a confidence score (0.0–1.0)
-- Components matching the same library are deduplicated, keeping the highest confidence
-- Cross-correlation between sources boosts confidence (e.g., string match + signature match)
-- Only components above `--min-confidence` threshold are included in the final SBOM
+Multiple identification sources contribute scored evidence. Results are merged with confidence-weighted deduplication before SBOM generation. Only components above the `--min-confidence` threshold are included.

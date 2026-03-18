@@ -74,6 +74,24 @@ neptune scan firmware.bin
 
 This skips AI analysis and signature matching, using only string and constant heuristics. Faster but lower confidence.
 
+## Analyze a full firmware image
+
+If you have a firmware image (not just a single binary), Neptune can unpack it, scan every binary inside, and merge results into a unified SBOM:
+
+```bash
+neptune analyze-image firmware.img --format all --output ./reports
+```
+
+## Malware triage
+
+Run malware triage on a suspicious sample:
+
+```bash
+neptune analyze-malware sample.bin --output ./cases
+```
+
+This produces YARA matches, capa detections, ranked signals, and behavior hypotheses in a structured case directory.
+
 ## Next steps
 
 <Cards>

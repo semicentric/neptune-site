@@ -59,6 +59,41 @@ jobs:
           path: ./sbom/
 ```
 
+## Vulnerability gate
+
+Use `neptune gate` to compare a current analysis against a baseline and fail on new critical vulnerabilities:
+
+```yaml
+- name: Analyze firmware
+  run: neptune analyze firmware.bin --json --quiet --output ./reports
+
+- name: Gate check
+  run: neptune gate baseline.json ./reports/neptune-analysis.json --max-new-critical 0
+```
+
+See [`neptune gate`](/cli/gate) for all options.
+
+## SBOM diff
+
+Track component drift between firmware versions:
+
+```bash
+neptune sbom-diff old-sbom.json new-sbom.json --json
+```
+
+See [`neptune sbom-diff`](/cli/sbom-diff) for details.
+
+## Supply chain attestation
+
+Generate in-toto/DSSE attestation envelopes for SBOMs, with optional cosign signing:
+
+```yaml
+- name: Attest SBOM
+  run: neptune attest ./reports/neptune-sbom-cyclonedx.json --sign
+```
+
+See [`neptune attest`](/cli/attest) for details.
+
 ## No-AI mode
 
 For deterministic CI runs without API dependencies:

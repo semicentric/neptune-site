@@ -1,0 +1,42 @@
+---
+title: neptune attest
+description: Create in-toto/DSSE attestation envelopes for SBOMs
+---
+
+# neptune attest
+
+Creates an [in-toto](https://in-toto.io/) / DSSE attestation envelope for an SBOM, with optional cosign signing for supply chain verification.
+
+## Usage
+
+```bash
+neptune attest <SBOM_FILE> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<SBOM_FILE>` | Path to the SBOM JSON file (CycloneDX, SPDX, or Neptune JSON) |
+
+## Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `--source-hash <SHA256>` | auto-detected | SHA-256 hash of the source firmware |
+| `--sign` | | Sign the attestation with cosign |
+| `--cosign-key <FILE>` | keyless | Path to cosign private key |
+| `-o, --output <FILE>` | `<sbom>.intoto.jsonl` | Output file path |
+
+## Examples
+
+```bash
+# Create unsigned attestation
+neptune attest sbom.json
+
+# Sign with cosign (keyless)
+neptune attest sbom.json --sign
+
+# Sign with explicit key
+neptune attest sbom.json --sign --cosign-key key.pem
+```

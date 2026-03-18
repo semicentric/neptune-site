@@ -1,4 +1,4 @@
 {
   "title": "CLI Reference",
-  "pages": ["analyze", "scan", "diff", "decompile", "rebuild", "port", "unpack", "policy", "db", "serve", "login"]
+  "pages": ["analyze", "analyze-image", "analyze-malware", "analyze-binary", "scan", "diff", "sbom-diff", "decompile", "rebuild", "port", "unpack", "policy", "gate", "license-report", "attest", "db", "serve", "login"]
 }

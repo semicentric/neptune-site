@@ -63,6 +63,28 @@ Download the generated SBOM in the specified format (`cyclonedx`, `spdx`, `vex`,
 
 **Role:** Viewer, Analyst, or Admin
 
+## Malware Analysis
+
+### Submit malware triage job
+
+```
+POST /api/v1/analyze-malware
+```
+
+Upload a binary sample for malware triage. Accepts multipart form data with `binary` (file), `no_yara` (optional), and `no_capa` (optional) fields. Returns a job ID.
+
+**Role:** Analyst or Admin
+
+### Get malware triage result
+
+```
+GET /api/v1/jobs/{id}/malware
+```
+
+Get the malware triage result for a completed job, including YARA matches, capa detections, signal rankings, and behavior hypotheses.
+
+**Role:** Viewer, Analyst, or Admin
+
 ## Signatures
 
 ### List signatures

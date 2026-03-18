@@ -1,0 +1,34 @@
+---
+title: neptune sbom-diff
+description: Compare two SBOMs to track component drift across versions
+---
+
+# neptune sbom-diff
+
+Compares two SBOM JSON files (CycloneDX or `neptune-analysis.json`) and reports added, removed, and changed components.
+
+## Usage
+
+```bash
+neptune sbom-diff <OLD_SBOM> <NEW_SBOM> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<OLD_SBOM>` | Path to the old SBOM |
+| `<NEW_SBOM>` | Path to the new SBOM |
+
+## Options
+
+| Flag | Description |
+|---|---|
+| `--json` | Output result as JSON |
+
+## Examples
+
+```bash
+neptune sbom-diff old-sbom.json new-sbom.json
+neptune sbom-diff v1-cyclonedx.json v2-cyclonedx.json --json
+```

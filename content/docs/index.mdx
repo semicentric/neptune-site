@@ -34,11 +34,17 @@ Neptune combines multiple identification techniques with confidence-weighted sco
   <Card title="Cross-Platform Porting">
     Port verified rebuilt source to a different target triple using AI-assisted platform adaptation.
   </Card>
+  <Card title="Devirtualization">
+    Symbolic lifting to devirtualize obfuscated x86/x64 PE binaries with automatic obfuscation detection.
+  </Card>
+  <Card title="Malware Triage">
+    YARA scanning, capa detection, signal ranking, behavior hypothesis generation, and structured case output.
+  </Card>
   <Card title="Firmware Diff">
-    Compare two firmware binaries to see added, removed, and changed components.
+    Compare two firmware binaries or SBOMs to see added, removed, and changed components.
   </Card>
   <Card title="Signature Database">
-    986 bundled signatures across 20 libraries and 5 architectures, extracted from real Debian-compiled binaries.
+    Bundled signatures across libraries and architectures, extracted from real compiled binaries.
   </Card>
   <Card title="Web Dashboard">
     Next.js frontend with GitHub OAuth, job management, real-time SSE progress, and signature browsing.
@@ -54,6 +60,6 @@ Neptune combines multiple identification techniques with confidence-weighted sco
 |---|---|
 | **Binary formats** | ELF, PE, Mach-O |
 | **Architectures** | x86, x86_64, ARM, AArch64, MIPS, RISC-V, PowerPC |
-| **SBOM formats** | CycloneDX 1.6, SPDX 2.3, VEX, HTML, JSON |
+| **SBOM formats** | CycloneDX 1.6, SPDX 2.3, VEX, SARIF, HTML, JSON |
 | **Firmware containers** | SquashFS, JFFS2, CramFS, CPIO, UBI, Android Boot |
 | **Vuln databases** | NVD (CPE), OSV (PURL) |

@@ -31,6 +31,7 @@ neptune decompile <BINARY> [OPTIONS]
 | `--all` | | Decompile all detected functions |
 | `--api-key <KEY>` | | Anthropic API key |
 | `--max-functions <N>` | `50` | Maximum functions to decompile in `--all` mode |
+| `--devirtualize` | | Use symbolic lifting to devirtualize obfuscated functions before decompilation (x86/x64 PE only) |
 
 <Callout type="info">
   You must specify either `--function` or `--all`.
@@ -47,4 +48,7 @@ NEPTUNE_DEV=1 neptune decompile firmware.bin --all
 
 # All functions with higher limit
 NEPTUNE_DEV=1 neptune decompile firmware.bin --all --max-functions 200
+
+# Devirtualize an obfuscated function
+NEPTUNE_DEV=1 neptune decompile protected.exe --function 0x1234 --devirtualize
 ```

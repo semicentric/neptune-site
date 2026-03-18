@@ -1,0 +1,42 @@
+---
+title: neptune gate
+description: CI/CD vulnerability gate — fail on new critical or high vulnerabilities
+---
+
+# neptune gate
+
+Compares a current analysis result against a baseline and exits with code 1 if new critical or high vulnerabilities exceed the configured thresholds. Designed for CI/CD pipelines.
+
+## Usage
+
+```bash
+neptune gate <BASELINE> <CURRENT> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<BASELINE>` | Path to the baseline `neptune-analysis.json` |
+| `<CURRENT>` | Path to the current `neptune-analysis.json` |
+
+## Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `--max-new-critical <N>` | `0` | Maximum number of new CRITICAL vulnerabilities allowed |
+| `--max-new-high <N>` | unlimited | Maximum number of new HIGH vulnerabilities allowed |
+| `--json` | | Output result as JSON |
+
+## Examples
+
+```bash
+# Fail on any new critical vulnerabilities
+neptune gate baseline.json current.json
+
+# Allow up to 2 new high vulns
+neptune gate baseline.json current.json --max-new-high 2
+
+# JSON output for CI
+neptune gate baseline.json current.json --json
+```

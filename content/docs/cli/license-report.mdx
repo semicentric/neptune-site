@@ -1,0 +1,37 @@
+---
+title: neptune license-report
+description: License compliance analysis with copyleft detection
+---
+
+# neptune license-report
+
+Analyzes identified components for license compliance. Detects copyleft licenses, reports license distribution, and flags compatibility issues. Exits with code 1 if copyleft components are found (unless `--allow-copyleft` is set).
+
+## Usage
+
+```bash
+neptune license-report <RESULT_FILE> [OPTIONS]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `<RESULT_FILE>` | Path to a `neptune-analysis.json` result file |
+
+## Options
+
+| Flag | Description |
+|---|---|
+| `--json` | Output as JSON |
+| `--allow-copyleft` | Do not fail on copyleft components |
+
+## Examples
+
+```bash
+# Check license compliance
+neptune license-report neptune-analysis.json
+
+# Allow copyleft, JSON output
+neptune license-report neptune-analysis.json --allow-copyleft --json
+```
