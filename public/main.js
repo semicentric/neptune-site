@@ -240,3 +240,20 @@ contactBtn.addEventListener('click', function () {
         }, 1600);
     });
 });
+
+var pricingOverlay = document.getElementById('pricingOverlay');
+document.getElementById('pricingLink').addEventListener('click', function (e) {
+    e.preventDefault();
+    pricingOverlay.classList.add('open');
+});
+document.getElementById('pricingClose').addEventListener('click', function () {
+    pricingOverlay.classList.remove('open');
+});
+pricingOverlay.addEventListener('click', function (e) {
+    if (e.target === pricingOverlay) pricingOverlay.classList.remove('open');
+});
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && pricingOverlay.classList.contains('open')) {
+        pricingOverlay.classList.remove('open');
+    }
+});
