@@ -1,9 +1,9 @@
 :root {
     --bg: #060608;
     --surface: #0c0c10;
-    --text: #7a7a85;
-    --text-dim: #3a3a42;
-    --text-bright: #dcdce0;
+    --text: #9a9aa8;
+    --text-dim: #5a5a68;
+    --text-bright: #e8e8ec;
     --border: rgba(255, 255, 255, 0.04);
     --serif: 'Fraunces', 'Georgia', serif;
     --mono: 'Geist Mono', ui-monospace, monospace;
@@ -101,7 +101,7 @@ a[href*="unicorn.studio?utm_source=public-url"] {
     right: 0;
     text-align: center;
     font-family: var(--mono);
-    font-size: 0.68rem;
+    font-size: 0.85rem;
     font-weight: 300;
     letter-spacing: 0.04em;
     color: var(--text);
@@ -148,7 +148,7 @@ h1 {
 
 .divider-label {
     font-family: var(--mono);
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     font-weight: 500;
     letter-spacing: 0.12em;
     color: var(--text-dim);
@@ -205,18 +205,18 @@ h1 {
 
 .cap-label {
     font-family: var(--mono);
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     font-weight: 500;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--text);
-    width: 88px;
+    width: 110px;
     flex-shrink: 0;
 }
 
 .cap-value {
     font-family: var(--serif);
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 300;
     color: var(--text-bright);
     font-style: italic;
@@ -257,7 +257,7 @@ h1 {
 }
 
 .install [torph-root] {
-    font-size: 0.78rem;
+    font-size: 0.95rem;
     font-weight: 300;
     letter-spacing: 0.01em;
     color: var(--text-bright);
@@ -279,7 +279,7 @@ h1 {
 .links a,
 .link-btn {
     font-family: var(--mono);
-    font-size: 0.68rem;
+    font-size: 0.85rem;
     font-weight: 300;
     letter-spacing: 0.04em;
     color: var(--text);
