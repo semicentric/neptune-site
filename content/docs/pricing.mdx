@@ -1,0 +1,60 @@
+---
+title: Pricing
+description: Plans and licensing for Neptune
+---
+
+Neptune uses platform access tiers — unlimited scans on every plan, no per-binary metering.
+
+## Plans
+
+| | Starter | Pro | Enterprise |
+|---|---|---|---|
+| **Price** | $500/mo | $2,000/mo | $50,000+/yr |
+| **Scans** | Unlimited | Unlimited | Unlimited |
+| **Seats** | 5 | 25 | Unlimited |
+| **Scan + Fingerprint + AI** | ✓ | ✓ | ✓ |
+| **CycloneDX & SPDX** | ✓ | ✓ | ✓ |
+| **NVD correlation** | ✓ | ✓ | ✓ |
+| **REST API** | ✓ | ✓ | ✓ |
+| **Decompilation & diff** | — | ✓ | ✓ |
+| **VEX, SARIF & HTML reports** | — | ✓ | ✓ |
+| **OSV correlation** | — | ✓ | ✓ |
+| **Web dashboard + SSE** | — | ✓ | ✓ |
+| **Malware triage** | — | ✓ | ✓ |
+| **Rebuild, porting & agent** | — | — | ✓ |
+| **On-prem deployment** | — | — | ✓ |
+| **Private vuln feeds** | — | — | ✓ |
+| **CI/CD integration** | — | — | ✓ |
+| **Support** | Email | Priority + Slack | Dedicated CSM + SLA |
+
+Annual billing available at a discount ($5,000/yr for Starter, $20,000/yr for Pro).
+
+## CLI License Key
+
+Premium CLI commands require a license key:
+
+```bash
+export NEPTUNE_LICENSE_KEY=npt_...
+```
+
+The key is validated against Neptune's license server and cached locally for 24 hours.
+
+### Feature Gating by Tier
+
+| Command | Minimum Tier |
+|---|---|
+| `neptune analyze` | Free (AI requires API key) |
+| `neptune scan` | Free |
+| `neptune analyze-malware` | Free |
+| `neptune analyze-binary` | Pro |
+| `neptune decompile` | Pro |
+| `neptune rebuild` | Enterprise |
+| `neptune port` | Enterprise |
+
+## Web Dashboard Billing
+
+Manage your subscription from the web dashboard at **Settings → Billing**.
+
+## Enterprise
+
+For on-prem deployment, private vulnerability feeds, dedicated support, or volume licensing — contact [sales@neptune.rip](mailto:sales@neptune.rip).
